@@ -1,0 +1,199 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../db/custom.db"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("USER")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions          Session[]
+  routineBlocks     RoutineBlock[]
+  tasks             Task[]
+  reminders         Reminder[]
+  habits            Habit[]
+  habitLogs         HabitLog[]
+  goals             Goal[]
+  monthlyObjectives MonthlyObjective[]
+  yearlyGoals       YearlyGoal[]
+  cycleReviews      CycleReview[]
+  dailyReports      DailyReport[]
+  chatMessages      ChatMessage[]
+  settings          Settings?
+  profile           Profile?
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model RoutineBlock {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  startTime String
+  endTime   String
+  category  String   @default("Focus")
+  notes     String   @default("")
+  completed Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Task {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title            String
+  completed        Boolean  @default(false)
+  dueDate          String?
+  period           String   @default("daily")
+  category         String   @default("Focus")
+  priority         String   @default("medium")
+  estimatedMinutes Int      @default(30)
+  timeBlock        String?
+  notes            String   @default("")
+  createdAt        DateTime @default(now())
+}
+
+model Reminder {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  type      String   @default("Focus")
+  timeOfDay String   @default("09:00")
+  aiReason  String   @default("")
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Habit {
+  id              String     @id @default(cuid())
+  userId          String
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name            String
+  category        String     @default("Productivity")
+  targetFrequency String     @default("Daily")
+  createdAt       DateTime   @default(now())
+  logs            HabitLog[]
+}
+
+model HabitLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  habitId   String
+  habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  date      String
+  completed Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Goal {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  category   String   @default("Productivity")
+  targetDate String?
+  progress   Int      @default(0)
+  completed  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model MonthlyObjective {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  month     String
+  title     String
+  completed Boolean  @default(false)
+  progress  Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model YearlyGoal {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  year      Int      @default(2026)
+  title     String
+  category  String   @default("Productivity")
+  milestone String   @default("")
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model CycleReview {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  periodType  String   @default("weekly")
+  periodLabel String
+  wins        String   @default("")
+  nextFocus   String   @default("")
+  rating      Int      @default(8)
+  createdAt   DateTime @default(now())
+}
+
+model DailyReport {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date       String
+  rating     Float    @default(8.0)
+  focusHours Float    @default(0)
+  tasksDone  Int      @default(0)
+  summary    String   @default("")
+  createdAt  DateTime @default(now())
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String
+  content   String
+  agentUsed String   @default("Routine Coach")
+  createdAt DateTime @default(now())
+}
+
+model Settings {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  language              String   @default("English")
+  wakeTime              String   @default("06:00")
+  sleepTime             String   @default("22:30")
+  dailyFocusTargetHours Float    @default(4.0)
+  dashboardWidgets      String   @default("focus,routine,tasks,reminders,habits,goals")
+  focusMotto            String   @default("One focused block at a time.")
+  createdAt             DateTime @default(now())
+}
+
+model Profile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  city         String   @default("Quetta, Balochistan, Pakistan")
+  roleTitle    String   @default("Student & Builder")
+  primaryFocus String   @default("Deep work, daily consistency, and time management")
+  bio          String   @default("")
+  createdAt    DateTime @default(now())
+}

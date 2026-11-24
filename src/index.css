@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-cream: #FAF7F0;
+    --bg-dark: #2E1F16;
+    --primary-red: #9E2B25;
+    --primary-red-hover: #8A241F;
+    --gold: #C89B5A;
+    --gold-deep: #B07A3F;
+    --card-surface: #FFFDF8;
+    --border-sand: #E5D9C3;
+    --muted-sand: #F3ECDF;
+    --text-body: #3B2A1E;
+    --text-muted: #7A6A58;
+    --success-green: #5F7A5A;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: #FAF7F0;
+    color: #3B2A1E;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: 'Plus Jakarta Sans', 'DM Sans', sans-serif;
+    letter-spacing: -0.025em;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Subtle Balochi diamond embroidery SVG overlay for dark backgrounds */
+.balochi-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C89B5A' stroke-opacity='0.09' stroke-width='1'%3E%3Cpath d='M32 4 L60 32 L32 60 L4 32 Z'/%3E%3Cpath d='M32 14 L50 32 L32 50 L14 32 Z'/%3E%3Cpath d='M32 24 L40 32 L32 40 L24 32 Z'/%3E%3Ccircle cx='32' cy='4' r='1.5' fill='%239E2B25' fill-opacity='0.14' stroke='none'/%3E%3Ccircle cx='60' cy='32' r='1.5' fill='%239E2B25' fill-opacity='0.14' stroke='none'/%3E%3Ccircle cx='32' cy='60' r='1.5' fill='%239E2B25' fill-opacity='0.14' stroke='none'/%3E%3Ccircle cx='4' cy='32' r='1.5' fill='%239E2B25' fill-opacity='0.14' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 64px 64px;
+}
+
+/* Horizontal divider with a centered gold diamond motif */
+.embroidered-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #E5D9C3 15%, #C89B5A 50%, #E5D9C3 85%, transparent 100%);
+}
+
+.embroidered-divider::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: #C89B5A;
+  border: 2px solid #FAF7F0;
+  transform: rotate(45deg);
+  box-shadow: 0 0 0 1px #C89B5A;
+}
+
+/* Small rotated square bullet for lists */
+.diamond-bullet {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  background-color: #C89B5A;
+  transform: rotate(45deg);
+}
+
+/* Gentle floating animations for hero cards */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes floatSlower {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.float-slower {
+  animation: floatSlower 9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float-slow,
+  .float-slower {
+    animation: none;
+  }
+}
+
+/* Radial glow helper for #2E1F16 dark brown sections */
+.dark-balochi-glow {
+  background-color: #2E1F16;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(158, 43, 37, 0.28), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(200, 155, 90, 0.2), transparent 48%);
+}
